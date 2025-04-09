@@ -1,0 +1,149 @@
+<section class="vh-100 bg-light">
+  <div class="container py-5 h-100">
+    <div class="row justify-content-center align-items-center h-100">
+      <div class="col-xl-10 col-md-12">
+
+        <div class="card shadow">
+          <div class="card-body p-4">
+
+            <!-- Cabeçalho -->
+            <div class="text-center mb-4">
+              <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-todo-list/check1.webp"
+                alt="Check" width="60">
+              <h2 class="mt-3">Task List</h2>
+              <p class="text-muted">Gerencie suas tarefas com praticidade</p>
+            </div>
+
+            <!-- Nova tarefa -->
+            <div class="input-group mb-4">
+              <input type="text" class="form-control form-control-lg" id="exampleFormControlInput1"
+                [(ngModel)]="novaTarefaTitulo" placeholder="Nova tarefa...">
+              <button type="button" class="btn btn-primary" data-bs-toggle="modal"
+                (click)="toggleEditar(0)" data-bs-target="#exampleModalCenter">
+                Nova Tarefa
+              </button>
+            </div>
+
+            <!-- Tabela de tarefas -->
+            <div class="table-responsive">
+              <table class="table table-hover align-middle text-dark">
+                <thead class="table-light">
+                  <tr>
+                    <th>Título</th>
+                    <th>Descrição</th>
+                    <th>Data</th>
+                    <th class="text-center">Ações</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let tarefa of tarefas" class="fw-normal">
+                    <td>
+                      <span [ngClass]="{ 'text-decoration-line-through': tarefa.dataConclusao }">
+                        {{ tarefa.titulo.length > 30 ? (tarefa.titulo | slice:0:30) + '...' : tarefa.titulo }}
+                      </span>
+                    </td>
+                    <td>
+                      <span [ngClass]="{ 'text-decoration-line-through': tarefa.dataConclusao }">
+                        {{ tarefa.descricao.length > 30 ? (tarefa.descricao | slice:0:30) + '...' : tarefa.descricao }}
+                      </span>
+                    </td>
+                    <td>
+                      <span class="badge bg-success"
+                        [ngClass]="{ 'text-decoration-line-through': tarefa.dataConclusao }">
+                        {{ tarefa.data | date:'dd/MM/yyyy HH:mm' }}
+                      </span>
+                    </td>
+                    <td class="text-center">
+                      <div class="d-flex flex-wrap justify-content-center gap-2">
+                        <button class="btn btn-sm"
+                          [ngClass]="tarefa.dataConclusao ? 'btn-outline-secondary' : 'btn-outline-primary'"
+                          [disabled]="tarefa.dataConclusao" (click)="concluir(tarefa.tarefaId)">
+                          <i class="bi bi-check"></i> Concluir
+                        </button>
+
+                        <button class="btn btn-outline-danger btn-sm"
+                          [disabled]="tarefa.dataConclusao" (click)="delete(tarefa.tarefaId)">
+                          <i class="bi bi-trash3"></i> Deletar
+                        </button>
+
+                        <button class="btn btn-outline-info btn-sm"
+                          [disabled]="tarefa.dataConclusao" data-bs-toggle="modal"
+                          data-bs-target="#exampleModalCenter" (click)="toggleEditar(tarefa.tarefaId)">
+                          <i class="bi bi-pen"></i> Editar
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <!-- Paginação -->
+            <nav *ngIf="totalItems > pageSize" class="mt-4">
+              <ul class="pagination justify-content-center">
+                <li class="page-item" [class.disabled]="currentPage === 1">
+                  <button class="page-link" (click)="mudarPagina(currentPage - 1)"
+                    [disabled]="currentPage === 1">« Anterior</button>
+                </li>
+
+                <li class="page-item" *ngIf="currentPage > 1">
+                  <button class="page-link" (click)="mudarPagina(currentPage - 1)">
+                    {{ currentPage - 1 }}
+                  </button>
+                </li>
+
+                <li class="page-item active">
+                  <span class="page-link">{{ currentPage }}</span>
+                </li>
+
+                <li class="page-item" *ngIf="currentPage < totalPages">
+                  <button class="page-link" (click)="mudarPagina(currentPage + 1)">
+                    {{ currentPage + 1 }}
+                  </button>
+                </li>
+
+                <li class="page-item" [class.disabled]="currentPage === totalPages">
+                  <button class="page-link" (click)="mudarPagina(currentPage + 1)"
+                    [disabled]="currentPage === totalPages">Próximo »</button>
+                </li>
+              </ul>
+            </nav>
+
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModalCenter" tabindex="-1" aria-labelledby="exampleModalCenterTitle"
+  aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalCenterTitle">Nova Tarefa</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+      </div>
+      
+      <div class="modal-body">
+        <div class="mb-3">
+          <label for="titulo" class="form-label">Título</label>
+          <input type="text" class="form-control" id="titulo" [(ngModel)]="tarefa.titulo" name="titulo">
+        </div>
+        <div class="mb-3">
+          <label for="descricao" class="form-label">Descrição</label>
+          <textarea class="form-control" id="descricao" name="descricao" [(ngModel)]="tarefa.descricao"
+            rows="3"></textarea>
+        </div>
+      </div>
+      
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+        <button type="button" class="btn btn-primary" (click)="salvar()">Salvar</button>
+      </div>
+    </div>
+  </div>
+</div>

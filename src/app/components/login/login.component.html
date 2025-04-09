@@ -1,0 +1,29 @@
+<div class="container d-flex align-items-center justify-content-center vh-100">
+  <div class="card shadow-lg p-4" style="max-width: 400px; width: 100%;">
+    <form (submit)="logar()">
+      <div class="text-center mb-4">
+       
+        <h2 class="fw-bold">Bem-vindo</h2>
+        <p class="text-muted">Entre com suas credenciais</p>
+      </div>
+
+      <div class="form-floating mb-3">
+        <input type="text" [(ngModel)]="login" name="login" class="form-control" id="loginInput" placeholder="Login" required>
+        <label for="loginInput">Login</label>
+      </div>
+
+      <div class="form-floating mb-4">
+        <input type="password" [(ngModel)]="senha" name="senha" class="form-control" id="senhaInput" placeholder="Senha" required>
+        <label for="senhaInput">Senha</label>
+      </div>
+
+      <button class="btn btn-primary w-100 mb-2" type="submit">
+        <i class="bi bi-box-arrow-in-right me-2"></i> Entrar
+      </button>
+      
+    </form>
+    <button class="btn btn-outline-secondary w-100" type="button"[routerLink]="['/cadastro']" >
+      <i class="bi bi-person-plus me-2" ></i> Cadastrar
+    </button>
+  </div>
+</div>
